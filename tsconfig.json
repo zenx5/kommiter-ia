@@ -16,6 +16,11 @@
         "@/*": ["./src/*"]
       }
     },
+    "ts-node": {
+      "experimentalSpecifierResolution": "node",
+      "transpileOnly": true,
+      "esm": true,
+    },
     "include": [],
-    "exclude": ["node_modules"]
+    "exclude": []
   }

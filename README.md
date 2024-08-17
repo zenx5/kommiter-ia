@@ -16,3 +16,8 @@
 - ac --select-model: select the model for the AI
     - display options to set the model
     - ask if model is for current folder or global
+
+
+## Installation
+
+ npm install -g auto-commit

@@ -1,10 +1,28 @@
-import process from "node:process"
+import readline from "node:readline"
+// import process from "node:process"
 
-export const readTerminal = async () => {
-    const data = await process.stdin.once("data")
-    return data.toString().trim()
+
+const terminal = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: ">"
+})
+
+
+
+export const readTerminal = async (prompt:string) => {
+    return new Promise((resolve, reject)=>{
+        try{
+            terminal.question(prompt, (response)=>{
+                terminal.close()
+                resolve(response)
+            })
+        }catch(e){
+            reject(e)
+        }
+    })
 }
 
 export const writeTerminal = async (message) => {
-    await process.stdout.write(message)
+    // await process.stdout.write(message)
 }

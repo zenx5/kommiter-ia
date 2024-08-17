@@ -10,10 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Model {
+  id        Int         @id @default(autoincrement())
+  name      String
+  provider  String
+  key       String
+  isGlobal  Boolean
+  Directory Directory[]
+}
 
-model Models {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  description String
-  key         String
+model Directory {
+  id      Int    @id @default(autoincrement())
+  path    String @unique
+  model   Model  @relation(fields: [modelId], references: [id])
+  modelId Int
 }
