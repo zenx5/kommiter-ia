@@ -16,7 +16,7 @@ model Model {
   provider  String
   key       String
   isGlobal  Boolean
-  Directory Directory[]
+  directory Directory[]
 }
 
 model Directory {
