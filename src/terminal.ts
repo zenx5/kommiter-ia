@@ -1,6 +1,5 @@
 import readline from "node:readline"
 import chalk from "chalk"
-// import process from "node:process"
 
 
 const terminal = readline.createInterface({
@@ -24,6 +23,11 @@ export const readTerminal = async (prompt:string, close?:boolean) => {
             reject(e)
         }
     })
+}
+
+export const writeTerminal = (message:string) => {
+    terminal.write(null, {ctrl:true, name:"l"})
+    terminal.write(colorize(message))
 }
 
 export const colorize = (message:string) => {
