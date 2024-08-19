@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "node --loader ts-node/esm ./src/index.ts",
-    "dev": "node --loader --watch ts-node/esm ./src/index.ts",
     "migration:generate": "prisma migrate dev --name",
     "postinstall": "npx prisma migrate dev --name auto"
   },
