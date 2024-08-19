@@ -12,8 +12,10 @@ export const createText = async (model:any, prompt:string) => {
     })
 }
 
-export const listModels = async () => {
-    return await prisma.model.findMany()
+export const listModels = async ( include:{ directory:boolean}|null = null ) => {
+    return await prisma.model.findMany({
+        include
+    })
 }
 
 export const searchModel = async (name:string) => {
@@ -31,21 +33,21 @@ export const setModel = async (name:string, provider:string, key:string) => {
             provider,
             key,
             isGlobal:false,
-            Directory: [] as Prisma.DirectoryUncheckedCreateNestedManyWithoutModelInput | Prisma.DirectoryCreateNestedManyWithoutModelInput | undefined
+            directory: [] as Prisma.DirectoryUncheckedCreateNestedManyWithoutModelInput | Prisma.DirectoryCreateNestedManyWithoutModelInput | undefined
         }
     })
 }
 
 
 export const getModel = async (model:any) => {
-    if( model.provider === "openai" ) {
+    if( model?.provider === "openai" ) {
         return createOpenAI({
             apiKey: model.key
-        })
+        })(model.name as string)
     }
-    else if( model.provider === "google" ) {
-        createGoogleGenerativeAI({
+    else if( model?.provider === "google" ) {
+        return createGoogleGenerativeAI({
             apiKey: model.key
-        })
+        })(model.name as string)
     }
 }
