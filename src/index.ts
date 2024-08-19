@@ -45,6 +45,9 @@ import { listModels } from "./ia-action";
                 console.log(e)
             }
         }
+        else{
+            console.log(message)
+        }
     }
     else if( ACTIONS.SET_KEY ) {
         const indexProvider = await readTerminal("Seleccion proveedor de IA: \n 1) Google\n 2) OpenAI\n 0) Cancelar\n Resp: ")
