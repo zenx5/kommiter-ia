@@ -1,12 +1,13 @@
 {
   "name": "kommiter-ia",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Crea tus commit con IA y escoge con que IA quieres trabajar",
   "scripts": {
     "start": "node --loader ts-node/esm src/index.ts",
     "dev": "node --loader --watch ts-node/esm src/index.ts",
-    "migration:generate": "prisma migrate dev --name"
+    "migration:generate": "prisma migrate dev --name",
+    "postinstall": "prisma migrate dev --name auto && echo 'alias kommit=\"node --loader ts-node/esm $HOME/node_modules/kommiter-ia/src/index.ts\"' >> ~/.bashrc"
   },
   "keywords": [],
   "author": "",
