@@ -31,9 +31,9 @@ export const writeTerminal = async (message) => {
 }
 
 export const colorize = (message:string) => {
-    return message.replace(/\[red\].{1,}\[\/red\]/g, (match) => {
+    return message.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {
         return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""))
-    }).replace(/\[green\].{1,}\[\/green\]/g, (match) => {
+    }).replace(/\[green\]([\s\S]*?)\[\/green\]/g, (match) => {
         return chalk.green(match.replace(/\[green\]/g, "").replace(/\[\/green\]/g, ""))
     })
 }
