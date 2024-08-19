@@ -1,27 +1,27 @@
 {
-    "compilerOptions": {
-      "lib": [],
-      "allowJs": true,
-      "skipLibCheck": true,
-      "strict": true,
-      "noEmit": true,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "module": "esnext",
-      "moduleResolution": "bundler",
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "incremental": true,
-      "plugins": [],
-      "paths": {
-        "@/*": ["./src/*"]
-      }
-    },
-    "ts-node": {
-      "experimentalSpecifierResolution": "node",
-      "transpileOnly": true,
-      "esm": true,
-    },
-    "include": [],
-    "exclude": []
-  }
+  "compilerOptions": {
+    "lib": [],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node", // Cambiado para que sea compatible con la mayoría de los proyectos.
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "outDir": "./dist", // Añadido para especificar el directorio de salida.
+    "plugins": [],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "esm": true
+  },
+  "include": ["src"], // Incluye la carpeta src para la compilación.
+  "exclude": ["node_modules"] // Excluye node_modules.
+}

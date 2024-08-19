@@ -1,10 +1,10 @@
 {
   "name": "kommiter-ia",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "description": "Crea tus commit con IA y escoge con que IA quieres trabajar",
   "bin": {
-    "kommit":"node --loader ts-node/esm ./src/index.ts"
+    "kommit":"/dist/index.js"
   },
   "scripts": {
     "start": "node --loader ts-node/esm ./src/index.ts",
