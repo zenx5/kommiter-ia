@@ -7,13 +7,18 @@ const prisma = new PrismaClient()
 export const generateCommitMessage = async () => {
     const modelData = await getModelAvailable()
     if( !modelData ) {
-        console.log("Model not found")
-        return
+        return {
+            code: 1,
+            message: "Model not found"
+        }
     }
     const model = await getModel(modelData)
-    const lastChanges = getLastChanges()
-    const response = await createText(model, `genera un mensaje de commit para los siguientes cambios:\n${lastChanges}`)
-    console.log( response )
+    const lastChanges = await getLastChanges()
+    const response = await createText(model, `genera un mensaje de commit para los siguientes cambios:\n${lastChanges}, limita la respuesta a solo describir los cambios `)
+    return {
+        code: 0,
+        message: response.text
+    }
 }
 
 const getModelAvailable = async () => {
@@ -31,6 +36,73 @@ const getModelAvailable = async () => {
     return await prisma.model.findUnique({
         where: {
             id: currentDirectory.modelId
+        }
+    })
+}
+
+export const createModel = async (name:string, provider:string, key:string, isGlobal:boolean) => {
+    const [model] = await prisma.model.findMany({
+        where:{
+            name,
+            provider,
+            key
+        }
+    })
+    if( model ) {
+        if( model.isGlobal===isGlobal ) return model
+        return await setGlobal(model.id)
+    }
+    const newModel = await prisma.model.create({
+        data: {
+            name,
+            provider,
+            key,
+            isGlobal:false
+        }
+    })
+    if( isGlobal ) await setGlobal(newModel.id)
+    return newModel
+}
+
+export const setGlobal = async (modelId:number) => {
+    await prisma.model.updateMany({
+        where: {
+            isGlobal: true
+        },
+        data: {
+            isGlobal: false
+        }
+    })
+    return await prisma.model.update({
+        where: {
+            id: modelId
+        },
+        data: {
+            isGlobal: true
+        }
+    })
+}
+
+export const setPath = async (modelId:number, path:string) => {
+    const [directory] = await prisma.directory.findMany({
+        where: {
+            path
+        }
+    })
+    if( directory ) {
+        return await prisma.directory.update({
+            where: {
+                id: directory.id
+            },
+            data: {
+                modelId
+            }
+        })
+    }
+    return await prisma.directory.create({
+        data: {
+            path,
+            modelId
         }
     })
 }
