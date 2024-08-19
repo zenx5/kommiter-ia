@@ -1,8 +1,8 @@
 {
-  "name": "git-commit",
+  "name": "kommiter-ia",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "description": "Crea tus commit con IA y escoge con que IA quieres trabajar",
   "scripts": {
     "start": "node --loader ts-node/esm src/index.ts",
     "dev": "node --loader --watch ts-node/esm src/index.ts",
