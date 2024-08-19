@@ -1,4 +1,5 @@
 import readline from "node:readline"
+import chalk from "chalk"
 // import process from "node:process"
 
 
@@ -10,11 +11,13 @@ const terminal = readline.createInterface({
 
 
 
-export const readTerminal = async (prompt:string) => {
+export const readTerminal = async (prompt:string, close?:boolean) => {
     return new Promise((resolve, reject)=>{
         try{
-            terminal.question(prompt, (response)=>{
-                terminal.close()
+            // clean terminal
+            terminal.write(null, {ctrl:true, name:"l"})
+            terminal.question(colorize(prompt), (response)=>{
+                if( close ) terminal.close()
                 resolve(response)
             })
         }catch(e){
@@ -25,4 +28,12 @@ export const readTerminal = async (prompt:string) => {
 
 export const writeTerminal = async (message) => {
     // await process.stdout.write(message)
+}
+
+export const colorize = (message:string) => {
+    return message.replace(/\[red\].{1,}\[\/red\]/g, (match) => {
+        return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""))
+    }).replace(/\[green\].{1,}\[\/green\]/g, (match) => {
+        return chalk.green(match.replace(/\[green\]/g, "").replace(/\[\/green\]/g, ""))
+    })
 }
