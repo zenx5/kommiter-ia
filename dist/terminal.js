@@ -1,6 +1,5 @@
 import readline from "node:readline";
 import chalk from "chalk";
-// import process from "node:process"
 const terminal = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -21,6 +20,10 @@ export const readTerminal = async (prompt, close) => {
             reject(e);
         }
     });
+};
+export const writeTerminal = (message) => {
+    terminal.write(null, { ctrl: true, name: "l" });
+    terminal.write(colorize(message));
 };
 export const colorize = (message) => {
     return message.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {

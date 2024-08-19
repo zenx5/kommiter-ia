@@ -1,96 +1,27 @@
 import process from "node:process";
-import { createModel, generateCommitMessage, setGlobal, setPath } from "./commands.js";
-import { readTerminal } from "./terminal.js";
-import { commit, push } from "./git-command.js";
-import { listModels } from "./ia-action.js";
+import { generateAction, help, renderListModels, selectGlobal, selectModel, setKey } from "./actions.js";
 (async function () {
-    const models = {
-        "google": [
-            "models/gemini-1.5-flash-latest",
-            "models/gemini-1.5-pro-latest"
-        ],
-        "openai": [
-            "gpt-4",
-            "gpt-4-turbo",
-            "gpt-4o-mini",
-            "gpt-4o"
-        ]
-    };
     const arg = process.argv.slice(2);
     const ACTIONS = {
-        GENERATE: arg.length === 0 || arg.includes('-y') || arg.includes('-p'),
+        GENERATE: arg.length === 0,
+        HELP: arg.includes('--help'),
+        LIST: arg.includes('--list'),
         SET_KEY: arg.includes('--set-key'),
         SELECT_MODEL: arg.includes('--select-model'),
         SELECT_GLOBAL: arg.includes('--select-global'),
     };
-    if (ACTIONS.GENERATE) {
-        const { message, code } = await generateCommitMessage();
-        if (code === 0) {
-            const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]"${message}"[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `);
-            try {
-                if (response === "1") {
-                    await commit(message);
-                }
-                else if (response === "2") {
-                    await commit(message);
-                    await push();
-                }
-            }
-            catch (e) {
-                console.log(e);
-            }
-        }
-        else {
-            console.log(message);
-        }
-    }
-    else if (ACTIONS.SET_KEY) {
-        const indexProvider = await readTerminal("Seleccion proveedor de IA: \n 1) Google\n 2) OpenAI\n 0) Cancelar\n Resp: ");
-        if (indexProvider === "0")
-            process.exit(0);
-        const provider = indexProvider === "1" ? "google" : "openai";
-        const messageModels = models[provider].reduce((acc, model, index) => {
-            return [...acc, ` ${index + 1}) ${model}\n`];
-        }, []).join("");
-        const indexModel = await readTerminal(`Selecciona modelo de ${provider}:\n${messageModels} 0) Cancelar\n Resp: `);
-        if (indexModel === "0")
-            process.exit(0);
-        const key = await readTerminal("Ingresa tu clave de API: ");
-        const isGlobal = await readTerminal("Scope de la Key:\n 1) Global\n 2) Carpeta actual\n 0) Cancelar\n Resp: ");
-        if (isGlobal === "0")
-            process.exit(0);
-        const model = await createModel(models[provider][parseInt(indexModel) - 1], provider, key, isGlobal === "1");
-        if (isGlobal !== "1") {
-            const path = process.cwd();
-            await setPath(model.id, path);
-        }
-    }
-    else if (ACTIONS.SELECT_MODEL) {
-        const path = process.cwd();
-        const models = await listModels({ directory: true });
-        const messageModels = models.reduce((acc, model, index) => {
-            const directory = model.directory?.find((dir) => dir.path === path);
-            if (!directory)
-                return [...acc, ` ${index + 1}) ${model.name}\n`];
-            return [...acc, ` ${index + 1}) ${model.name} (current)\n`];
-        }, []).join("");
-        const indexModel = await readTerminal(`Selecciona modelo:\n${messageModels} 0) Cancelar\n Resp: `);
-        if (indexModel === "0")
-            process.exit(0);
-        const model = models[parseInt(indexModel) - 1];
-        await setPath(model.id, path);
-    }
-    else if (ACTIONS.SELECT_GLOBAL) {
-        const models = await listModels();
-        const messageModels = models.reduce((acc, model, index) => {
-            return [...acc, ` ${index + 1}) ${model.name} ${model.isGlobal && '(Global)'}\n`];
-        }, []).join("");
-        const indexModel = await readTerminal(`Selecciona modelo:\n${messageModels} 0) Cancelar\n Resp: `);
-        if (indexModel === "0")
-            process.exit(0);
-        const model = models[parseInt(indexModel) - 1];
-        await setGlobal(model.id);
-    }
+    if (ACTIONS.GENERATE)
+        await generateAction();
+    else if (ACTIONS.HELP)
+        await help();
+    else if (ACTIONS.LIST)
+        await renderListModels();
+    else if (ACTIONS.SET_KEY)
+        await setKey();
+    else if (ACTIONS.SELECT_MODEL)
+        await selectModel();
+    else if (ACTIONS.SELECT_GLOBAL)
+        await selectGlobal();
     else {
         console.log("Invalid command");
         process.exit(1);
