@@ -1,13 +1,16 @@
 {
   "name": "kommiter-ia",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "type": "module",
   "description": "Crea tus commit con IA y escoge con que IA quieres trabajar",
+  "bin": {
+    "kommit":"ts-node ./src/index.ts"
+  },
   "scripts": {
-    "start": "node --loader ts-node/esm src/index.ts",
-    "dev": "node --loader --watch ts-node/esm src/index.ts",
+    "start": "node --loader ts-node/esm ./src/index.ts",
+    "dev": "node --loader --watch ts-node/esm ./src/index.ts",
     "migration:generate": "prisma migrate dev --name",
-    "postinstall": "npx prisma migrate dev --name auto && echo 'alias kommit=\"node --loader ts-node/esm $HOME/node_modules/kommiter-ia/src/index.ts\"' >> ~/.bashrc"
+    "postinstall": "npx prisma migrate dev --name auto"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +20,7 @@
     "@ai-sdk/openai": "^0.0.48",
     "@prisma/client": "5.18.0",
     "ai": "^3.3.9",
-    "chalk": "^5.3.0"
-  },
-  "devDependencies": {
+    "chalk": "^5.3.0",
     "@types/node": "^22.4.0",
     "prisma": "^5.18.0",
     "ts-node": "^10.9.2",

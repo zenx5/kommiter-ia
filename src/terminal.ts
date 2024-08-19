@@ -26,10 +26,6 @@ export const readTerminal = async (prompt:string, close?:boolean) => {
     })
 }
 
-export const writeTerminal = async (message) => {
-    // await process.stdout.write(message)
-}
-
 export const colorize = (message:string) => {
     return message.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {
         return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""))
