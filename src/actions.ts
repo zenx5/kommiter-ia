@@ -29,7 +29,7 @@ export const generateAction = async () => {
         }
     }
     else{
-        console.log(message)
+        console.log("message", message)
     }
 }
 
