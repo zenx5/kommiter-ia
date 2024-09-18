@@ -15,7 +15,7 @@ export const generateCommitMessage = async () => {
     }
     const model = await getModel(modelData)
     const lastChanges = await getLastChanges() as string
-    const response = await createText(model, `genera un mensaje de commit para los siguientes cambios:\n${lastChanges.replace(/`/g,"'")}, limita la respuesta a solo describir los cambios y toma en consideracion estas convenciones de prefijos para el commit ${prefix.join(", ")}, el formato del commit debe ser "[prefijo]: [mensaje]".`)
+    const response = await createText(model, `genera un mensaje de commit para los siguientes cambios:\n${lastChanges.replace(/`/g,"'")}, limita la respuesta a solo describir los cambios y toma en consideracion estas convenciones de prefijos para el commit ${prefix.join(", ")}.`)
     return {
         code: 0,
         message: response.text
