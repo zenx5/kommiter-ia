@@ -23,7 +23,7 @@ export const generateAction = async () => {
             if (e instanceof Error)
                 writeTerminal(`Error al realizar el commit: ${e.message}\n`);
             else
-                writeTerminal("Errpr al realizar el commit.\n");
+                writeTerminal("Error al realizar el commit.\n");
         }
     }
     else {
