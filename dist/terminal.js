@@ -8,8 +8,7 @@ const terminal = readline.createInterface({
 export const readTerminal = async (prompt, close) => {
     return new Promise((resolve, reject) => {
         try {
-            // clean terminal
-            terminal.write(null, { ctrl: true, name: "l" });
+            cleanTerminal();
             terminal.question(colorize(prompt), (response) => {
                 if (close)
                     terminal.close();
@@ -22,8 +21,11 @@ export const readTerminal = async (prompt, close) => {
     });
 };
 export const writeTerminal = (message) => {
-    terminal.write(null, { ctrl: true, name: "l" });
+    cleanTerminal();
     terminal.write(colorize(message));
+};
+export const cleanTerminal = () => {
+    terminal.write(null, { ctrl: true, name: "l" });
 };
 export const colorize = (message) => {
     return message.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {

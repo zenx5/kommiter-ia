@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createText, getModel } from "./ia-action.js";
 import { getLastChanges } from "./git-command.js";
+import { prefix } from "./constants.js";
 const prisma = new PrismaClient();
 export const generateCommitMessage = async () => {
     const modelData = await getModelAvailable();
@@ -12,7 +13,7 @@ export const generateCommitMessage = async () => {
     }
     const model = await getModel(modelData);
     const lastChanges = await getLastChanges();
-    const response = await createText(model, `genera un mensaje de commit para los siguientes cambios:\n${lastChanges.replace(/`/g, "'")}, limita la respuesta a solo describir los cambios `);
+    const response = await createText(model, `genera un mensaje de commit para los siguientes cambios:\n${lastChanges.replace(/`/g, "'")}, limita la respuesta a solo describir los cambios y toma en consideracion estas convenciones de prefijos para el commit ${prefix.join(", ")}.`);
     return {
         code: 0,
         message: response.text

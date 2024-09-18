@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node --loader ts-node/esm ./src/index.ts",
+    "build": "tsc",
     "migration:generate": "prisma migrate dev --name",
     "postinstall": "npx prisma migrate dev --name auto"
   },
