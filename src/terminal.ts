@@ -13,8 +13,7 @@ const terminal = readline.createInterface({
 export const readTerminal = async (prompt:string, close?:boolean) => {
     return new Promise((resolve, reject)=>{
         try{
-            // clean terminal
-            terminal.write(null, {ctrl:true, name:"l"})
+            cleanTerminal()
             terminal.question(colorize(prompt), (response)=>{
                 if( close ) terminal.close()
                 resolve(response)
@@ -26,8 +25,12 @@ export const readTerminal = async (prompt:string, close?:boolean) => {
 }
 
 export const writeTerminal = (message:string) => {
-    terminal.write(null, {ctrl:true, name:"l"})
+    cleanTerminal()
     terminal.write(colorize(message))
+}
+
+export const cleanTerminal = () => {
+    terminal.write(null, {ctrl:true, name:"l"})
 }
 
 export const colorize = (message:string) => {
