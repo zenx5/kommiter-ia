@@ -17,7 +17,7 @@ export const generateAction = async () => {
                 await push()
             }
             cleanTerminal()
-            writeTerminal("Commit realizado con éxito")
+            writeTerminal("Commit realizado con éxito.\n")
         } catch(e) {
             cleanTerminal()
             if( e instanceof Error ) writeTerminal(`Error al realizar el commit: ${e.message}\n`)
