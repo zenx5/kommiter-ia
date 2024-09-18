@@ -20,6 +20,7 @@ export const generateAction = async () => {
             writeTerminal("Commit realizado con éxito.\n")
         } catch(e) {
             cleanTerminal()
+            console.log(e)
             if( e instanceof Error ) writeTerminal(`Error al realizar el commit: ${e.message}\n`)
             else writeTerminal("Error al realizar el commit.\n")
         }
