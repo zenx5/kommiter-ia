@@ -9,6 +9,7 @@ export const generateAction = async () => {
     if( code===NOT_ERROR ) {
         const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `) as string
         try{
+            console.log(`"${response}"`)
             if( response === ONLY_COMMIT ) {
                 await commit(message as string)
             }
