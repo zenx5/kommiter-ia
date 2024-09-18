@@ -10,15 +10,19 @@ export const generateAction = async () => {
         const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `) as string
         try{
             if( response === ONLY_COMMIT ) {
-                await commit(message as string)
+                const resp1 = await commit(message as string)
+                console.log(resp1)
             }
             else if( response === COMMIT_AND_PUSH ) {
-                await commit(message as string)
-                await push()
+                const resp1 = await commit(message as string)
+                const resp2 = await push()
+                console.log(resp1)
+                console.log(resp2)
             }
             cleanTerminal()
             writeTerminal("Commit realizado con éxito.\n")
         } catch(e) {
+            console.log(e)
             cleanTerminal()
             if( e instanceof Error ) writeTerminal(`Error al realizar el commit: ${e.message}\n`)
             else writeTerminal(e as string)
