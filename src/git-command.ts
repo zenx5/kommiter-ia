@@ -12,7 +12,7 @@ export const execute = async (command:string) => {
                 }
                 if (stderr) {
                     console.log("stderr")
-                    reject({ error:false, message:stderr });
+                    resolve({ error:false, message:stderr });
                     return;
                 }
                 console.log("stdout")
