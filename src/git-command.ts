@@ -3,6 +3,7 @@ import { exec } from 'child_process'
 export const execute = async (command:string) => {
     return new Promise( (resolve, reject) => {
         try{
+            console.log(`Executing command: ${command}`)
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     reject({ error:true, message:error.message });
@@ -15,6 +16,7 @@ export const execute = async (command:string) => {
                 resolve({ error:false, message:stdout });
             });
         }catch(e){
+            console.log("Error executing command", e)
             reject({ error:true, message:e });
         }
     })
