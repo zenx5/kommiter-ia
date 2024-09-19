@@ -30,7 +30,7 @@ export const writeTerminal = (message:string) => {
 }
 
 export const cleanTerminal = () => {
-    // terminal.write(null, {ctrl:true, name:"l"})
+    terminal.write(null, {ctrl:true, name:"l"})
 }
 
 export const colorize = (message:string) => {
