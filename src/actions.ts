@@ -22,19 +22,21 @@ export const generateAction = async () => {
                     console.log("Error al realizar el commit.")
                     throw new Error(messageCommit)
                 }
+                console.log("Commit realizado con éxito.\n")
                 console.log("before Push")
                 const { error:errorPush, message:messagePush } = await push() as { error:boolean, message:any }
                 if( errorPush ) {
                     console.log("Error al realizar el push.")
                     throw new Error(messagePush)
                 }
+                console.log("Push realizado con éxito.")
             }
             cleanTerminal()
             console.log("Commit realizado con éxito.\n")
             writeTerminal("Commit realizado con éxito.\n")
         } catch(e) {
             cleanTerminal()
-            console.log("Error al realizar el commit.")
+            console.log("Algo no va muy bien.")
             console.log(e)
             console.log(e.message)
             if( e instanceof Error ) writeTerminal(`Error al realizar el commit: ${e.message}\n`)
