@@ -30,7 +30,7 @@ export const getStatus = async () => {
 }
 
 export const commit = async (message:string) => {
-    const command = `git commit -m "${message.replace(/'/gm, `'\\''`)} \n[by Kommiter]"`
+    const command = `git commit -m "${message.replace(/`/gm, '"').replace(/'/gm, `'\\''`)} \n[by Kommiter]"`
     console.log('command', command)
     const data = await execute(command)
     console.log('data', data)
