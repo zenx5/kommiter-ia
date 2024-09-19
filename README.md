@@ -1,7 +1,7 @@
 # Kommiter IA
 Generador de commits usando IA a partir de los cambios hechos en los archivos.<br/>
 Solo selecciona el modelo de lenguaje, agrega tu API KEY y olvidate de contemplar el universo<br/>
-mientras se te ocurre que escribir en tus commits
+mientras se te ocurre que escribir en tus commits.
 
 
 ## Commands
@@ -14,4 +14,4 @@ mientras se te ocurre que escribir en tus commits
 
 ## Installation
 
- npm install -g kommiter-ia
+ npm install -G kommiter-ia
