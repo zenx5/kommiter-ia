@@ -16,11 +16,13 @@ export const generateAction = async () => {
             }
             else if( response === COMMIT_AND_PUSH ) {
                 console.log("Commit and Push")
+                console.log("before Commit")
                 const { error:errorCommit, message:messageCommit } = await commit(message as string) as { error:boolean, message:any }
                 if( errorCommit ) {
                     console.log("Error al realizar el commit.")
                     throw new Error(messageCommit)
                 }
+                console.log("before Push")
                 const { error:errorPush, message:messagePush } = await push() as { error:boolean, message:any }
                 if( errorPush ) {
                     console.log("Error al realizar el push.")
