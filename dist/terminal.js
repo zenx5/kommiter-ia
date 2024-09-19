@@ -28,9 +28,14 @@ export const cleanTerminal = () => {
     terminal.write(null, { ctrl: true, name: "l" });
 };
 export const colorize = (message) => {
-    return message.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {
-        return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""));
-    }).replace(/\[green\]([\s\S]*?)\[\/green\]/g, (match) => {
-        return chalk.green(match.replace(/\[green\]/g, "").replace(/\[\/green\]/g, ""));
-    });
+    try {
+        return message?.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {
+            return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""));
+        }).replace(/\[green\]([\s\S]*?)\[\/green\]/g, (match) => {
+            return chalk.green(match.replace(/\[green\]/g, "").replace(/\[\/green\]/g, ""));
+        });
+    }
+    catch (e) {
+        return message;
+    }
 };

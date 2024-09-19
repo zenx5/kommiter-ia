@@ -9,11 +9,17 @@ export const generateAction = async () => {
         const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `);
         try {
             if (response === ONLY_COMMIT) {
-                await commit(message);
+                const { error: errorCommit, message: messageCommit } = await commit(message);
+                if (errorCommit)
+                    throw new Error(messageCommit);
             }
             else if (response === COMMIT_AND_PUSH) {
-                await commit(message);
-                await push();
+                const { error: errorCommit, message: messageCommit } = await commit(message);
+                if (errorCommit)
+                    throw new Error(messageCommit);
+                const { error: errorPush, message: messagePush } = await push();
+                if (errorPush)
+                    throw new Error(messagePush);
             }
             cleanTerminal();
             writeTerminal("Commit realizado con éxito.\n");
@@ -23,7 +29,7 @@ export const generateAction = async () => {
             if (e instanceof Error)
                 writeTerminal(`Error al realizar el commit: ${e.message}\n`);
             else
-                writeTerminal("Error al realizar el commit.\n");
+                writeTerminal(e);
         }
     }
     else {
