@@ -6,7 +6,6 @@ import { listModels } from "./ia-action"
 
 export const generateAction = async () => {
     const { message, code } = await generateCommitMessage()
-    console.log("code", code)
     if( code===NOT_ERROR ) {
         const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `) as string
         try{
@@ -23,14 +22,13 @@ export const generateAction = async () => {
             cleanTerminal()
             writeTerminal("Commit realizado con éxito.\n")
         } catch(e) {
-            console.log('error 2', e)
             cleanTerminal()
             if( e instanceof Error ) writeTerminal(`Error al realizar el commit: ${e.message}\n`)
             else writeTerminal(e as string)
         }
     }
     else{
-        console.log("message", message)
+        console.log(message)
     }
 }
 
