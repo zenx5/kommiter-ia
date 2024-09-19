@@ -17,9 +17,15 @@ export const generateAction = async () => {
             else if( response === COMMIT_AND_PUSH ) {
                 console.log("Commit and Push")
                 const { error:errorCommit, message:messageCommit } = await commit(message as string) as { error:boolean, message:any }
-                if( errorCommit ) throw new Error(messageCommit)
+                if( errorCommit ) {
+                    console.log("Error al realizar el commit.")
+                    throw new Error(messageCommit)
+                }
                 const { error:errorPush, message:messagePush } = await push() as { error:boolean, message:any }
-                if( errorPush ) throw new Error(messagePush)
+                if( errorPush ) {
+                    console.log("Error al realizar el push.")
+                    throw new Error(messagePush)
+                }
             }
             cleanTerminal()
             console.log("Commit realizado con éxito.\n")
@@ -28,6 +34,7 @@ export const generateAction = async () => {
             cleanTerminal()
             console.log("Error al realizar el commit.")
             console.log(e)
+            console.log(e.message)
             if( e instanceof Error ) writeTerminal(`Error al realizar el commit: ${e.message}\n`)
             else writeTerminal(e as string)
         }
