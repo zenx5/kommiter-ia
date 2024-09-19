@@ -6,13 +6,16 @@ export const execute = async (command:string) => {
             console.log(`Executing command: ${command}`)
             exec(command, (error, stdout, stderr) => {
                 if (error) {
+                    console.log("error")
                     reject({ error:true, message:error.message });
                     return;
                 }
                 if (stderr) {
+                    console.log("stderr")
                     reject({ error:false, message:stderr });
                     return;
                 }
+                console.log("stdout")
                 resolve({ error:false, message:stdout });
             });
         }catch(e){
