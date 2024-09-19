@@ -26,7 +26,7 @@ export const readTerminal = async (prompt:string, close?:boolean) => {
 
 export const writeTerminal = (message:string) => {
     cleanTerminal()
-    terminal.write(colorize(message))
+    terminal.write(colorize(message as string))
 }
 
 export const cleanTerminal = () => {
@@ -34,9 +34,13 @@ export const cleanTerminal = () => {
 }
 
 export const colorize = (message:string) => {
-    return message.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {
-        return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""))
-    }).replace(/\[green\]([\s\S]*?)\[\/green\]/g, (match) => {
-        return chalk.green(match.replace(/\[green\]/g, "").replace(/\[\/green\]/g, ""))
-    })
+    try{
+        return message?.replace(/\[red\]([\s\S]*?)\[\/red\]/g, (match) => {
+            return chalk.red(match.replace(/\[red\]/g, "").replace(/\[\/red\]/g, ""))
+        }).replace(/\[green\]([\s\S]*?)\[\/green\]/g, (match) => {
+            return chalk.green(match.replace(/\[green\]/g, "").replace(/\[\/green\]/g, ""))
+        })
+    }catch(e){
+        return message
+    }
 }
