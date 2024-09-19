@@ -4,14 +4,14 @@ export const execute = async (command:string) => {
     return new Promise( (resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                reject(error.message);
+                reject({ error:true, message:error.message });
                 return;
             }
             if (stderr) {
-                reject(stderr);
+                reject({ error:false, message:stderr });
                 return;
             }
-            resolve(stdout);
+            resolve({ error:false, message:stdout });
         });
     })
 }
