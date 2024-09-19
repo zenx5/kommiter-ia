@@ -15,8 +15,6 @@ export const generateCommitMessage = async () => {
     }
     const model = await getModel(modelData)
     const { error, message }= await getLastChanges() as { error:boolean, message:string }
-    console.log(message)
-    console.log( typeof message)
     if( error ) {
         return {
             code: 1,

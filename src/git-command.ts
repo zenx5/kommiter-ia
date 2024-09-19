@@ -30,14 +30,9 @@ export const getStatus = async () => {
 }
 
 export const commit = async (message:string) => {
-    const command = `git commit -m "${message.replace(/`/gm, '"').replace(/'/gm, `'\\''`)} \n[by Kommiter]"`
-    console.log('command', command)
-    const data = await execute(command)
-    console.log('data', data)
-    return data
+    return await execute(`git commit -m "${message.replace(/`/gm, '"').replace(/'/gm, `'\\''`)} \n[by Kommiter]"`)
 }
 
 export const push = async () => {
-    return { error: false, message: "Push realizado con éxito." }
-    // return await execute(`git push`)
+    return await execute(`git push`)
 }
