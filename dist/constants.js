@@ -1,6 +1,4 @@
 export const NOT_ERROR = 0;
-export const ONLY_COMMIT = '1';
-export const COMMIT_AND_PUSH = '2';
 export const NOT_GLOBAL = '0';
 export const YES_GLOBAL = '1';
 export const CANCEL = '0';
@@ -27,3 +25,12 @@ export const prefix = [
     'style: Cambios de formato, tabulaciones, espacios o puntos y coma, etc; no afectan al usuario',
     'test: Añade tests o refactoriza uno existente'
 ];
+export const ONLY_COMMIT = '1';
+export const COMMIT_AND_PUSH = '2';
+export const EDIT_MESSAGE = '3';
+export const optionsResponse = [
+    "Hacer commit",
+    "Hacer commit y push",
+    "Editar mensaje",
+    "Cancelar",
+].map((option, index) => `${index + 1}) ${option}`);

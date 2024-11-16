@@ -1,9 +1,18 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { exec } from 'node:child_process';
 import { PrismaClient } from "@prisma/client";
 import { createText, getModel } from "./ia-action.js";
 import { getLastChanges } from "./git-command.js";
 import { prefix } from "./constants.js";
 const prisma = new PrismaClient();
-export const generateCommitMessage = async () => {
+export const generateCommitMessage = async (defaultMessage = null) => {
+    if (defaultMessage) {
+        return {
+            code: 0,
+            message: defaultMessage
+        };
+    }
     const modelData = await getModelAvailable();
     if (!modelData) {
         return {
@@ -107,5 +116,49 @@ export const setPath = async (modelId, path) => {
             path,
             modelId
         }
+    });
+};
+// metodo para crear archivo temporal con mensaje de commit
+export const createCommitMessageFile = async (message) => {
+    const filePath = path.join(process.cwd(), '.commit-message.txt');
+    fs.writeFileSync(filePath, message);
+    return filePath;
+};
+// metodo para borrar archivo temporal
+export const deleteCommitMessageFile = async (filePath) => {
+    fs.unlinkSync(filePath);
+};
+// metodo para leer archivo temporal
+export const readCommitMessageFile = async (filePath) => {
+    return fs.readFileSync(filePath, 'utf8');
+};
+// abrit nano o vim para editar mensaje de commit
+export const openEditor = async (filePath) => {
+    return new Promise((resolve, reject) => {
+        try {
+            exec(`code -w ${filePath}`, (error) => {
+                if (error)
+                    reject(false);
+                resolve(true);
+            });
+        }
+        catch (e) {
+            reject(false);
+        }
+    });
+};
+// esperar que el archivo temporal sea editado
+export const waitForCommitMessage = async (filePath, originalMessage) => {
+    return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+            try {
+                const message = await readCommitMessageFile(filePath);
+                if (message !== originalMessage) {
+                    clearInterval(interval);
+                    resolve(true);
+                }
+            }
+            catch (e) { }
+        }, 1000);
     });
 };
