@@ -5,7 +5,8 @@ import { CANCEL, COMMIT_AND_PUSH, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL
 import { listModels } from "./ia-action"
 
 export const generateAction = async () => {
-    const { message, code } = await generateCommitMessage()
+    const { message:messageNotFormat, code } = await generateCommitMessage()
+    const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'")
     if( code===NOT_ERROR ) {
         const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `) as string
         try{
