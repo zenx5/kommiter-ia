@@ -1,4 +1,4 @@
-# Kommiter IA v1.0.15
+# Kommiter IA v1.0.16
 Generador de commits usando IA a partir de los cambios hechos en los archivos.<br/>
 Solo selecciona el modelo de lenguaje, agrega tu API KEY y olvidate de contemplar el universo<br/>
 mientras se te ocurre que escribir en tus commits.
