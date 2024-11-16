@@ -1,14 +1,14 @@
 import { cleanTerminal, readTerminal, writeTerminal } from "./terminal"
-import { createModel, generateCommitMessage, setGlobal, setPath } from "./commands"
+import { createCommitMessageFile, createModel, deleteCommitMessageFile, generateCommitMessage, openEditor, readCommitMessageFile, setGlobal, setPath } from "./commands"
 import { commit, push } from "./git-command"
-import { CANCEL, COMMIT_AND_PUSH, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL, models } from "./constants"
+import { CANCEL, COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL, models, optionsResponse } from "./constants"
 import { listModels } from "./ia-action"
 
-export const generateAction = async () => {
-    const { message:messageNotFormat, code } = await generateCommitMessage()
+export const generateAction = async ( defaultMessage:string|null = null ) => {
+    const { message:messageNotFormat, code } = await generateCommitMessage(defaultMessage)
     const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'")
     if( code===NOT_ERROR ) {
-        const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n 1) Hacer commit\n 2) Hacer commit y push\n 3) Cancelar\n Resp: `) as string
+        const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n ${optionsResponse.join("\n ")} Resp: `) as string
         try{
             if( response === ONLY_COMMIT ) {
                 const { error:errorCommit, message:messageCommit } = await commit(message as string) as { error:boolean, message:any }
@@ -19,6 +19,19 @@ export const generateAction = async () => {
                 if( errorCommit ) throw new Error(messageCommit)
                 const { error:errorPush, message:messagePush } = await push() as { error:boolean, message:any }
                 if( errorPush ) throw new Error(messagePush)
+            }
+            else if( response === EDIT_MESSAGE ) {
+                const filePath = await createCommitMessageFile(message as string)
+                const result = await openEditor(filePath)
+                if( !result ) throw new Error("Error al abrir al editar el commit")
+                const newMessage = await readCommitMessageFile(filePath)
+                await deleteCommitMessageFile(filePath)
+                cleanTerminal()
+                await generateAction(newMessage)
+            }
+            else{
+                cleanTerminal()
+                process.exit(0)
             }
             cleanTerminal()
             writeTerminal("Commit realizado con éxito.\n")
