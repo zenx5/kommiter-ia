@@ -1,6 +1,6 @@
 {
   "name": "kommiter-ia",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "type": "module",
   "description": "Crea tus commit con IA y escoge con que IA quieres trabajar",
   "bin": {

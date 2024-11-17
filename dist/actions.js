@@ -56,7 +56,7 @@ export const setKey = async () => {
     const indexProvider = await readTerminal(`Seleccion proveedor de IA: \n${modelOptions} 0) Cancelar\n Resp: `);
     if (indexProvider === CANCEL)
         process.exit(0);
-    const provider = modelOptions[Number(indexProvider) - 1];
+    const provider = Object.keys(models)[Number(indexProvider) - 1];
     const messageModels = models[provider].reduce((acc, model, index) => {
         return [...acc, ` ${index + 1}) ${model}\n`];
     }, []).join("");
