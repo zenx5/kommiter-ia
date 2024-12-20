@@ -1,4 +1,5 @@
 import { cleanTerminal, readTerminal, writeTerminal } from "./terminal"
+import { createMenu } from "terminal-i2"
 import { createCommitMessageFile, createModel, deleteCommitMessageFile, generateCommitMessage, openEditor, readCommitMessageFile, setGlobal, setPath } from "./commands"
 import { commit, push } from "./git-command"
 import { CANCEL, COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL, models, optionsResponse } from "./constants"
@@ -8,7 +9,20 @@ export const generateAction = async ( defaultMessage:string|null = null ) => {
     const { message:messageNotFormat, code } = await generateCommitMessage(defaultMessage)
     const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'")
     if( code===NOT_ERROR ) {
-        const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n ${optionsResponse.join("\n ")} Resp: `) as string
+        const menu = new createMenu({
+            colorTitle: 'red',
+            bgColorOption: '',
+            colorOption: 'white',
+            bgColorOptionHover: 'bgYellow',
+            colorOptionHover: 'red',
+        });
+        const response = await menu
+            .head(`[white]...:::Kommiter IA:::...[/white]\n¿Desea hacer commit con este mensaje?\n[green]${message}[/green]`)
+            .item("Hacer commit", true)
+            .item("Hacer commit y push")
+            .item("Editar mensaje")
+            .item("Cancelar")
+            .render()
         try{
             if( response === ONLY_COMMIT ) {
                 const { error:errorCommit, message:messageCommit } = await commit(message as string) as { error:boolean, message:any }

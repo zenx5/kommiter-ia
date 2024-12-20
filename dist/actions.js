@@ -1,13 +1,27 @@
 import { cleanTerminal, readTerminal, writeTerminal } from "./terminal.js";
+import { createMenu } from "terminal-i2";
 import { createCommitMessageFile, createModel, deleteCommitMessageFile, generateCommitMessage, openEditor, readCommitMessageFile, setGlobal, setPath } from "./commands.js";
 import { commit, push } from "./git-command.js";
-import { CANCEL, COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL, models, optionsResponse } from "./constants.js";
+import { CANCEL, COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL, models } from "./constants.js";
 import { listModels } from "./ia-action.js";
 export const generateAction = async (defaultMessage = null) => {
     const { message: messageNotFormat, code } = await generateCommitMessage(defaultMessage);
     const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'");
     if (code === NOT_ERROR) {
-        const response = await readTerminal(`¿Desea hacer commit con este mensaje?\n[green]${message}[/green]\n\n ${optionsResponse.join("\n ")} Resp: `);
+        const menu = new createMenu({
+            colorTitle: 'red',
+            bgColorOption: '',
+            colorOption: 'white',
+            bgColorOptionHover: 'bgYellow',
+            colorOptionHover: 'red',
+        });
+        const response = await menu
+            .head(`[white]...:::Kommiter IA:::...[/white]\n¿Desea hacer commit con este mensaje?\n[green]${message}[/green]`)
+            .item("Hacer commit", true)
+            .item("Hacer commit y push")
+            .item("Editar mensaje")
+            .item("Cancelar")
+            .render();
         try {
             if (response === ONLY_COMMIT) {
                 const { error: errorCommit, message: messageCommit } = await commit(message);

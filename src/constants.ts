@@ -28,9 +28,9 @@ export const prefix = [
     'test: Añade tests o refactoriza uno existente'
 ]
 
-export const ONLY_COMMIT = '1'
-export const COMMIT_AND_PUSH = '2'
-export const EDIT_MESSAGE = '3'
+export const ONLY_COMMIT = 1
+export const COMMIT_AND_PUSH = 2
+export const EDIT_MESSAGE = 3
 
 export const optionsResponse = [
     "Hacer commit",

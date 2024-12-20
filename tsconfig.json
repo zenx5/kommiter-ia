@@ -23,6 +23,10 @@
     "transpileOnly": true,
     "esm": true
   },
+  "tsc-alias":{
+    "resolveFullPaths": true,
+    "verbose": false
+  },
   "include": ["src"], // Incluye la carpeta src para la compilación.
   "exclude": ["node_modules"] // Excluye node_modules.
 }
