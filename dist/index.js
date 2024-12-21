@@ -1,10 +1,11 @@
 import process from "node:process";
-import { generateAction, help, renderListModels, selectGlobal, selectModel, setKey } from "./actions.js";
+import { generateAction, menuConfig, help, renderListModels, selectGlobal, selectModel, setKey } from "./actions.js";
 (async function () {
     const arg = process.argv.slice(2);
     const ACTIONS = {
         GENERATE: arg.length === 0,
         HELP: arg.includes('--help'),
+        CONFIG: arg.includes('--config'),
         LIST: arg.includes('--list'),
         SET_KEY: arg.includes('--set-key'),
         SELECT_MODEL: arg.includes('--select-model'),
@@ -14,6 +15,8 @@ import { generateAction, help, renderListModels, selectGlobal, selectModel, setK
         await generateAction();
     else if (ACTIONS.HELP)
         await help();
+    else if (ACTIONS.CONFIG)
+        await menuConfig();
     else if (ACTIONS.LIST)
         await renderListModels();
     else if (ACTIONS.SET_KEY)

@@ -1,7 +1,7 @@
 export const NOT_ERROR = 0;
-export const NOT_GLOBAL = '0';
-export const YES_GLOBAL = '1';
-export const CANCEL = '0';
+export const NOT_GLOBAL = 0;
+export const YES_GLOBAL = 1;
+export const CANCEL = 0;
 export const models = {
     "google": [
         "models/gemini-1.5-flash-latest",

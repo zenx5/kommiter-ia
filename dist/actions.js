@@ -2,19 +2,20 @@ import { cleanTerminal, readTerminal, writeTerminal } from "./terminal.js";
 import { createMenu } from "terminal-i2";
 import { createCommitMessageFile, createModel, deleteCommitMessageFile, generateCommitMessage, openEditor, readCommitMessageFile, setGlobal, setPath } from "./commands.js";
 import { commit, push } from "./git-command.js";
-import { CANCEL, COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, NOT_GLOBAL, ONLY_COMMIT, YES_GLOBAL, models } from "./constants.js";
+import { COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, ONLY_COMMIT, YES_GLOBAL, models } from "./constants.js";
 import { listModels } from "./ia-action.js";
+const configMenu = {
+    colorTitle: 'red',
+    bgColorOption: '',
+    colorOption: 'white',
+    bgColorOptionHover: 'bgYellow',
+    colorOptionHover: 'red',
+};
 export const generateAction = async (defaultMessage = null) => {
     const { message: messageNotFormat, code } = await generateCommitMessage(defaultMessage);
     const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'");
     if (code === NOT_ERROR) {
-        const menu = new createMenu({
-            colorTitle: 'red',
-            bgColorOption: '',
-            colorOption: 'white',
-            bgColorOptionHover: 'bgYellow',
-            colorOptionHover: 'red',
-        });
+        const menu = new createMenu(configMenu);
         const response = await menu
             .head(`[white]...:::Kommiter IA:::...[/white]\n¿Desea hacer commit con este mensaje?\n[green]${message}[/green]`)
             .item("Hacer commit", true)
@@ -65,51 +66,125 @@ export const generateAction = async (defaultMessage = null) => {
         console.log(message);
     }
 };
-export const setKey = async () => {
-    const modelOptions = Object.keys(models).map((model, index) => ` ${index + 1}) ${model}\n`).join("");
-    const indexProvider = await readTerminal(`Seleccion proveedor de IA: \n${modelOptions} 0) Cancelar\n Resp: `);
-    if (indexProvider === CANCEL)
-        process.exit(0);
+export const menuConfig = async () => {
+    const notEndProcess = true;
+    let option = 0;
+    while (option !== 4) {
+        const menu = new createMenu({
+            ...configMenu,
+            markedOption: 0,
+            title: `[white]...:::Kommiter IA:::...\nConfiguración[/white]`,
+            options: [
+                ' > Configurar clave de API',
+                ' > Seleccionar modelo para la carpeta actual',
+                ' > Seleccionar modelo global',
+                ' > Cancelar'
+            ]
+        });
+        option = await menu.render();
+        if (option === 1)
+            await setKey(notEndProcess);
+        else if (option === 2)
+            await selectModel(notEndProcess);
+        else if (option === 3)
+            await selectGlobal(notEndProcess);
+    }
+};
+export const setKey = async (notEndProcess = false) => {
+    const modelOptions = Object.keys(models).map((model, index) => ` > ${model}`);
+    const firstMenu = new createMenu({
+        ...configMenu,
+        markedOption: 0,
+        title: `[white]...:::Kommiter IA:::...\nSelecciona proveedor de IA[/white]`,
+        options: [...modelOptions, ' > Cancelar']
+    });
+    const indexProvider = await firstMenu.render();
+    if (indexProvider === modelOptions.length + 1) {
+        if (notEndProcess)
+            return;
+        else
+            process.exit(0);
+    }
     const provider = Object.keys(models)[Number(indexProvider) - 1];
     const messageModels = models[provider].reduce((acc, model, index) => {
-        return [...acc, ` ${index + 1}) ${model}\n`];
-    }, []).join("");
-    const indexModel = await readTerminal(`Selecciona modelo de ${provider}:\n${messageModels} 0) Cancelar\n Resp: `);
-    if (indexModel === CANCEL)
-        process.exit(0);
+        return [...acc, ` > ${model}`];
+    }, []);
+    const secondMenu = new createMenu({
+        ...configMenu,
+        markedOption: 0,
+        title: `[white]...:::Kommiter IA:::...\nSelecciona modelo de ${provider}:[/white]`,
+        options: [...messageModels, ' > Cancelar']
+    });
+    const indexModel = await secondMenu.render();
+    if (indexModel === messageModels.length + 1) {
+        if (notEndProcess)
+            return;
+        else
+            process.exit(0);
+    }
     const key = await readTerminal("Ingresa tu clave de API: ");
-    const isGlobal = await readTerminal("Scope de la Key:\n 1) Global\n 2) Carpeta actual\n 0) Cancelar\n Resp: ");
-    if (isGlobal === NOT_GLOBAL)
-        process.exit(0);
+    const thirdMenu = new createMenu({
+        ...configMenu,
+        markedOption: 0,
+        title: `[white]...:::Kommiter IA:::...\nScope de la Key:[/white]`,
+        options: [' > Global', ' > Carpeta actual', ' > Cancelar']
+    });
+    const isGlobal = await thirdMenu.render();
+    if (isGlobal === 3) {
+        if (notEndProcess)
+            return;
+        else
+            process.exit(0);
+    }
     const model = await createModel(models[provider][parseInt(indexModel) - 1], provider, key, isGlobal === YES_GLOBAL);
     if (isGlobal !== YES_GLOBAL) {
         const path = process.cwd();
         await setPath(model.id, path);
     }
 };
-export const selectModel = async () => {
+export const selectModel = async (notEndProcess = true) => {
     const path = process.cwd();
     const models = await listModels({ directory: true });
     const messageModels = models.reduce((acc, model, index) => {
         const directory = model.directory?.find((dir) => dir.path === path);
         if (!directory)
-            return [...acc, ` ${index + 1}) ${model.name}\n`];
-        return [...acc, ` ${index + 1}) ${model.name} (current)\n`];
-    }, []).join("");
-    const indexModel = await readTerminal(`Selecciona modelo:\n${messageModels} 0) Cancelar\n Resp: `);
-    if (indexModel === CANCEL)
-        process.exit(0);
+            return [...acc, ` ${index + 1}) ${model.name}`];
+        return [...acc, ` > ${model.name} (current)`];
+    }, []);
+    const menu = new createMenu({
+        ...configMenu,
+        markedOption: 0,
+        title: `[white]...:::Kommiter IA:::...\nSelecciona modelo:[/white]`,
+        options: [...messageModels, ' > Cancelar']
+    });
+    const indexModel = await menu.render();
+    if (indexModel === messageModels.length + 1) {
+        if (notEndProcess)
+            return;
+        else
+            process.exit(0);
+    }
     const model = models[parseInt(indexModel) - 1];
     await setPath(model.id, path);
 };
-export const selectGlobal = async () => {
+export const selectGlobal = async (notEndProcess = false) => {
     const models = await listModels();
     const messageModels = models.reduce((acc, model, index) => {
-        return [...acc, ` ${index + 1}) ${model.name} ${model.isGlobal && '(Global)'}\n`];
-    }, []).join("");
-    const indexModel = await readTerminal(`Selecciona modelo:\n${messageModels} 0) Cancelar\n Resp: `);
-    if (indexModel === CANCEL)
-        process.exit(0);
+        return [...acc, ` > ${model.name} ${model.isGlobal && '(Global)'}`];
+    }, []);
+    const menu = new createMenu({
+        ...configMenu,
+        markedOption: 0,
+        title: `[white]...:::Kommiter IA:::...\nSelecciona modelo:[/white]`,
+        options: [...messageModels, ' > Cancelar']
+    });
+    const indexModel = await menu.render();
+    if (indexModel === messageModels.length + 1) {
+        if (notEndProcess)
+            return;
+        else
+            process.exit(0);
+    }
     const model = models[parseInt(indexModel) - 1];
     await setGlobal(model.id);
 };
