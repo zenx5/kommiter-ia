@@ -3,6 +3,8 @@ Generador de commits usando IA a partir de los cambios hechos en los archivos.<b
 Solo selecciona el modelo de lenguaje, agrega tu API KEY y olvidate de contemplar el universo<br/>
 mientras se te ocurre que escribir en tus commits.
 
+![image](https://github.com/user-attachments/assets/34fe021e-79bf-4955-9d99-dca44176f5b0)
+
 
 ## Commands
 - kommit: create a new commit message
