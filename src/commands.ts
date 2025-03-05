@@ -8,14 +8,14 @@ import { prefix } from "./constants"
 
 const prisma = new PrismaClient()
 
-export const generateCommitMessage = async (defaultMessage:string|null = null) => {
+export const generateCommitMessage = async (defaultMessage:string|null = null, modelDefault?:typeModel ) => {
     if( defaultMessage ) {
         return {
             code: 0,
             message: defaultMessage
         }
     }
-    const modelData = await getModelAvailable()
+    const modelData = modelDefault ? modelDefault : await getModelAvailable()
     if( !modelData ) {
         return {
             code: 1,
