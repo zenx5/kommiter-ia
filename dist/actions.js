@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { cleanTerminal, readTerminal, writeTerminal } from "./terminal.js";
 import { createMenu } from "terminal-i2";
 import { createCommitMessageFile, createModel, deleteCommitMessageFile, generateCommitMessage, openEditor, readCommitMessageFile, setGlobal, setPath } from "./commands.js";
@@ -11,8 +12,8 @@ const configMenu = {
     bgColorOptionHover: 'bgYellow',
     colorOptionHover: 'red',
 };
-export const generateAction = async (defaultMessage = null) => {
-    const { message: messageNotFormat, code } = await generateCommitMessage(defaultMessage);
+export const generateAction = async (defaultMessage = null, model) => {
+    const { message: messageNotFormat, code } = await generateCommitMessage(defaultMessage, model);
     const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'");
     if (code === NOT_ERROR) {
         const menu = new createMenu(configMenu);
@@ -41,7 +42,7 @@ export const generateAction = async (defaultMessage = null) => {
                 const filePath = await createCommitMessageFile(message);
                 const result = await openEditor(filePath);
                 if (!result)
-                    throw new Error("Error al abrir al editar el commit");
+                    throw new Error("Error al editar el commit");
                 const newMessage = await readCommitMessageFile(filePath);
                 await deleteCommitMessageFile(filePath);
                 cleanTerminal();
@@ -64,6 +65,18 @@ export const generateAction = async (defaultMessage = null) => {
     }
     else {
         console.log(message);
+    }
+};
+export const fromFile = async (fileName) => {
+    try {
+        const response = await readFileSync(fileName);
+        const { name, provider, key } = JSON.parse(response.toString());
+        if (!name || !provider || !key)
+            throw new Error("Modelo no definido.");
+        await generateAction(null, { name, provider, key });
+    }
+    catch (e) {
+        console.log(e.message);
     }
 };
 export const menuConfig = async () => {
@@ -198,7 +211,9 @@ export const renderListModels = async () => {
 export const help = async () => {
     writeTerminal(`\n  Uso: kommit [opciones]\n  Usa este comando para generar commits para tus cambios en Git\n\n  Opciones:\n    --help
         Muestra esta ayuda\n    --list
-        Muestra los modelos disponibles\n    --set-key
+        Muestra los modelos disponibles\n    --file
+        para proporcionar las credenciales de IA del archivo kommit.json\n    --fileName
+        se utiliza para utilizar un nombre de archivo diferente a kommit.json\n    --set-key
         Configura una clave de API\n    --select-model
         Selecciona un modelo para la carpeta actual\n    --select-global
         Selecciona un modelo global\n`);

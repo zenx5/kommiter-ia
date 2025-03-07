@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client"
 import { createText, getModel } from "./ia-action"
 import { getLastChanges } from "./git-command"
 import { prefix } from "./constants"
+import { typeModel } from './index'
 
 const prisma = new PrismaClient()
 

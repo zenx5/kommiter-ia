@@ -34,3 +34,13 @@ export const optionsResponse = [
     "Editar mensaje",
     "Cancelar",
 ].map((option, index) => `${index + 1}) ${option}`);
+export const flags = {
+    help: '--help',
+    file: '--file',
+    config: '--config',
+    list: '--list',
+    setKey: '--set-key',
+    selectModel: '--select-model',
+    selectGlobal: '--select-global',
+    fileName: '--fileName'
+};

@@ -6,14 +6,14 @@ import { createText, getModel } from "./ia-action.js";
 import { getLastChanges } from "./git-command.js";
 import { prefix } from "./constants.js";
 const prisma = new PrismaClient();
-export const generateCommitMessage = async (defaultMessage = null) => {
+export const generateCommitMessage = async (defaultMessage = null, modelDefault) => {
     if (defaultMessage) {
         return {
             code: 0,
             message: defaultMessage
         };
     }
-    const modelData = await getModelAvailable();
+    const modelData = modelDefault ? modelDefault : await getModelAvailable();
     if (!modelData) {
         return {
             code: 1,
