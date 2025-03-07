@@ -33,11 +33,13 @@ By using the `--file` option, you can run kommit without prior installation usin
 
 
 ## Installation
-npm install -G kommiter-ia
-
-## GitHub
-- [https://github.com/zenx5/kommiter-ia](https://github.com/zenx5/kommiter-ia)
+`npm install -G kommiter-ia`
+`pnpm install -G kommiter-ia`
 
 ## Sponsor it
 - Patreon: [https://www.patreon.com/c/Zenx5dev](https://www.patreon.com/c/Zenx5dev)
 - Paypal: [https://www.paypal.com/paypalme/omartinez8](https://www.paypal.com/paypalme/omartinez8)
+
+## Links
+- Github: [https://github.com/zenx5/kommiter-ia](https://github.com/zenx5/kommiter-ia)
+- NPM: [https://www.npmjs.com/package/kommiter-ia](https://www.npmjs.com/package/kommiter-ia)
