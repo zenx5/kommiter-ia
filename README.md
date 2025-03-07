@@ -33,7 +33,7 @@ By using the `--file` option, you can run kommit without prior installation usin
 
 
 ## Installation
-`npm install -G kommiter-ia`
+`npm install -G kommiter-ia`<br/>
 `pnpm install -G kommiter-ia`
 
 ## Sponsor it
