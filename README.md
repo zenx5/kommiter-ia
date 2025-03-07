@@ -1,4 +1,4 @@
-# Kommiter IA v1.1.0
+# Kommiter IA
 AI-powered commit generator based on changes made to files.<br/>
 Just select the language model, add your API KEY, and forget about contemplating the universe<br/>
 while you come up with what to write in your commits.<br/><br/>
@@ -36,7 +36,7 @@ By using the `--file` option, you can run kommit without prior installation usin
 npm install -G kommiter-ia
 
 ## GitHub
-[https://github.com/zenx5/kommiter-ia](https://github.com/zenx5/kommiter-ia)
+- [https://github.com/zenx5/kommiter-ia](https://github.com/zenx5/kommiter-ia)
 
 ## Sponsor it
 - Patreon: [https://www.patreon.com/c/Zenx5dev](https://www.patreon.com/c/Zenx5dev)
