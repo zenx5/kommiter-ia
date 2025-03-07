@@ -39,7 +39,7 @@ export const setModel = async (name:string, provider:string, key:string) => {
 }
 
 
-export const getModel = async (model:any) => {
+export const getModel = async (model:{ name:string, provider:string, key:string } ) => {
     if( model?.provider === "openai" ) {
         return createOpenAI({
             apiKey: model.key

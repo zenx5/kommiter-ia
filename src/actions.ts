@@ -1,9 +1,11 @@
+import { readFileSync } from "node:fs"
 import { cleanTerminal, readTerminal, writeTerminal } from "./terminal"
 import { createMenu } from "terminal-i2"
 import { createCommitMessageFile, createModel, deleteCommitMessageFile, generateCommitMessage, openEditor, readCommitMessageFile, setGlobal, setPath } from "./commands"
 import { commit, push } from "./git-command"
 import { CANCEL, COMMIT_AND_PUSH, EDIT_MESSAGE, NOT_ERROR, ONLY_COMMIT, YES_GLOBAL, models } from "./constants"
 import { listModels } from "./ia-action"
+import { typeModel } from "./index"
 
 const configMenu = {
     colorTitle: 'red',
@@ -13,8 +15,8 @@ const configMenu = {
     colorOptionHover: 'red',
 }
 
-export const generateAction = async ( defaultMessage:string|null = null ) => {
-    const { message:messageNotFormat, code } = await generateCommitMessage(defaultMessage)
+export const generateAction = async ( defaultMessage:string|null = null, model?:typeModel ) => {
+    const { message:messageNotFormat, code } = await generateCommitMessage(defaultMessage, model)
     const message = new String(messageNotFormat).replace(/`/gm, "'").replace(/"/gm, "'")
     if( code===NOT_ERROR ) {
         const menu = new createMenu(configMenu);
@@ -59,6 +61,17 @@ export const generateAction = async ( defaultMessage:string|null = null ) => {
     }
     else{
         console.log(message)
+    }
+}
+
+export const fromFile = async (fileName:string) => {
+    try{
+        const response = await readFileSync(fileName)
+        const { name, provider, key } = JSON.parse( response.toString() )
+        if( !name || !provider || !key ) throw new Error("Modelo no definido.")
+        await generateAction(null, { name, provider, key})
+    } catch(e:any) {
+        console.log( e.message )
     }
 }
 
